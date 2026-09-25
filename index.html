@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillHire · Drafting & Trades</title>
+  <link rel="apple-touch-icon" href="favicon-180.png">
+  <!-- Google Font & Font Awesome for modern look -->
+   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='%230e7c7b' d='M480 256c0-88.4-71.6-160-160-160-13.3 0-24-10.7-24-24s10.7-24 24-24c114.9 0 208 93.1 208 208 0 13.3-10.7 24-24 24s-24-10.7-24-24zm-256 0c0-13.3 10.7-24 24-24s24 10.7 24 24-10.7 24-24 24-24-10.7-24-24zm-32 0c0-48 21.9-90.9 56.4-119.8 5.3-4.4 13.2-3.7 17.6 1.6s3.7 13.2-1.6 17.6C216.7 155.7 192 187.6 192 256c0 13.3-10.7 24-24 24s-24-10.7-24-24zm-64 0c0-13.3 10.7-24 24-24s24 10.7 24 24-10.7 24-24 24-24-10.7-24-24z'/></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f6f9fc;
+      color: #1a2b3e;
+      line-height: 1.5;
+      scroll-behavior: smooth;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* header / nav */
+    .navbar {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid #e9eef3;
+    }
+
+    .nav-flex {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 1.7rem;
+      letter-spacing: -0.02em;
+      color: #0b3b5c;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo i {
+      color: #0e7c7b;
+      font-size: 1.8rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      font-weight: 500;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #2a4b6c;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: #0e7c7b;
+    }
+
+    /* buttons */
+    .btn {
+      display: inline-block;
+      background: #0e7c7b;
+      color: white;
+      font-weight: 600;
+      padding: 0.75rem 1.8rem;
+      border-radius: 40px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+      box-shadow: 0 6px 14px rgba(14, 124, 123, 0.2);
+    }
+
+    .btn:hover {
+      background: #0a5f5e;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 20px rgba(14, 124, 123, 0.25);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid #0e7c7b;
+      color: #0e7c7b;
+      box-shadow: none;
+    }
+
+    .btn-outline:hover {
+      background: #0e7c7b;
+      color: white;
+    }
+
+    /* hero */
+    .hero {
+      padding: 3.5rem 0 4rem;
+      background: linear-gradient(145deg, #ffffff 0%, #f2f8fa 100%);
+    }
+
+    .hero-grid {
+      display: flex;
+      align-items: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-content {
+      flex: 1 1 350px;
+    }
+
+    .hero-content .badge {
+      background: #d4f0ef;
+      color: #0b5e5d;
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      display: inline-block;
+      margin-bottom: 1.2rem;
+      letter-spacing: 0.3px;
+    }
+
+    .hero-content h1 {
+      font-size: 3.2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      color: #0a2b3f;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-content h1 span {
+      color: #0e7c7b;
+      background: linear-gradient(120deg, #0e7c7b 0%, #1fa5a3 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-content p {
+      font-size: 1.15rem;
+      color: #3c5c77;
+      max-width: 550px;
+      margin-bottom: 2rem;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-number {
+      font-weight: 700;
+      font-size: 1.8rem;
+      color: #0e7c7b;
+    }
+
+    .stat-label {
+      color: #5b7a94;
+      font-size: 0.9rem;
+    }
+
+    .hero-image {
+      flex: 1 1 300px;
+      background: #d9eef0;
+      border-radius: 40px;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 30px 40px -20px rgba(0, 60, 70, 0.2);
+    }
+
+    .hero-image i {
+      font-size: 8rem;
+      color: #0e7c7b;
+      opacity: 0.8;
+    }
+
+    .hero-image p {
+      font-weight: 500;
+      color: #1d5352;
+    }
+
+    /* section */
+    section {
+      padding: 4.5rem 0;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-title h2 {
+      font-size: 2.3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #0a2b3f;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title p {
+      color: #52718b;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* skill cards */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.8rem;
+    }
+
+    .skill-card {
+      background: white;
+      border-radius: 24px;
+      padding: 2rem 1.5rem;
+      box-shadow: 0 12px 28px rgba(0, 20, 30, 0.04);
+      transition: all 0.25s;
+      border: 1px solid #e1eef2;
+      text-align: center;
+    }
+
+    .skill-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 38px -8px rgba(14, 124, 123, 0.12);
+      border-color: #b8dbdb;
+    }
+
+    .skill-icon {
+      background: #d9f0ef;
+      width: 70px;
+      height: 70px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+    }
+
+    .skill-icon i {
+      font-size: 2.2rem;
+      color: #0e7c7b;
+    }
+
+    .skill-card h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+      color: #12384e;
+    }
+
+    .skill-card p {
+      color: #4c6b83;
+      font-size: 0.95rem;
+    }
+
+    /* hire form */
+    .hire-section {
+      background: #ffffff;
+      border-radius: 48px;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 40, 50, 0.15);
+      border: 1px solid #deeef2;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: 2.2rem;
+    }
+
+    .form-header i {
+      font-size: 2.5rem;
+      color: #0e7c7b;
+      background: #e1f2f1;
+      padding: 1rem;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+    }
+
+    .form-header h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0a2b3f;
+    }
+
+    .form-header p {
+      color: #52718b;
+      margin-top: 0.5rem;
+    }
+
+    .hire-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group.full-width {
+      grid-column: span 2;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #1d4057;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .form-group label i {
+      color: #0e7c7b;
+      font-size: 0.9rem;
+      width: 18px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 0.9rem 1.2rem;
+      border-radius: 16px;
+      border: 1.5px solid #cbdde6;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      background: #fbfefe;
+      transition: 0.2s;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: #0e7c7b;
+      box-shadow: 0 0 0 4px rgba(14, 124, 123, 0.1);
+      background: white;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .btn-submit {
+      grid-column: span 2;
+      background: #0e7c7b;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 1rem;
+      border-radius: 40px;
+      border: none;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 0.5rem;
+      box-shadow: 0 12px 24px -8px rgba(14, 124, 123, 0.4);
+    }
+
+    .btn-submit:hover {
+      background: #0a5f5e;
+      transform: scale(1.01);
+    }
+
+    .form-note {
+      grid-column: span 2;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #678aa3;
+      margin-top: 0.5rem;
+    }
+
+    /* footer */
+    footer {
+      background: #0f2838;
+      color: #b6cfdd;
+      padding: 2.5rem 0;
+      margin-top: 2rem;
+    }
+
+    .footer-grid {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .footer-logo {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .footer-logo i {
+      color: #5fc2c0;
+    }
+
+    .footer-copy {
+      font-size: 0.9rem;
+    }
+
+    /* responsiveness */
+    @media (max-width: 700px) {
+      .hero-content h1 {
+        font-size: 2.3rem;
+      }
+      .navbar .nav-links {
+        display: none;
+      }
+      .hire-form {
+        grid-template-columns: 1fr;
+      }
+      .form-group.full-width {
+        grid-column: span 1;
+      }
+      .btn-submit {
+        grid-column: span 1;
+      }
+      .form-note {
+        grid-column: span 1;
+      }
+      .hero-stats {
+        gap: 1.2rem;
+      }
+      .hire-section {
+        padding: 2rem 1.5rem;
+      }
+    }
+
+    /* success message */
+    .toast-message {
+      background: #e1f2f1;
+      color: #0a5f5e;
+      padding: 1rem 1.5rem;
+      border-radius: 60px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 2rem;
+      border: 1px solid #b0dbd9;
+      box-shadow: 0 8px 20px rgba(14, 124, 123, 0.1);
+      animation: fadeIn 0.4s ease;
+    }
+
+    .toast-message i {
+      font-size: 1.4rem;
+      color: #0e7c7b;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container nav-flex">
+      <div class="logo">
+        <i class="fas fa-hard-hat"></i> SkillHire
+      </div>
+      <div class="nav-links">
+        <a href="#skills">Skills</a>
+        <a href="#hire">Hire now</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <a href="#hire" class="btn btn-outline" style="padding: 0.6rem 1.5rem;">Hire a job</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <div class="badge"><i class="fas fa-check-circle" style="margin-right: 6px;"></i> Trusted professionals</div>
+        <h1>Hire skilled <span>drafting & trades</span> experts</h1>
+        <p>Connect with degree-holding drafters, licensed plumbers, masons, and architectural specialists. Fill out the form and we’ll route your request directly.</p>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <a href="#hire" class="btn"><i class="fas fa-pen"></i> Hire a pro</a>
+          <a href="#skills" class="btn btn-outline">Explore skills</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <span class="stat-number">15+</span>
+            <span class="stat-label">Skilled pros</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">Direct email</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">24h</span>
+            <span class="stat-label">Response</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-image">
+        <i class="fas fa-drafting-compass"></i>
+        <p style="margin-top: 0.5rem; font-weight: 600;"><i class="fas fa-wrench"></i> Plumbing · Masonry · Drafting</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- SKILLS SECTION -->
+  <section id="skills" class="container">
+    <div class="section-title">
+      <h2>Professional skills ready to hire</h2>
+      <p>From blueprint drafting to on-site plumbing & masonry — our network has the right expert for your project.</p>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <div class="skill-icon"><i class="fas fa-drafting-compass"></i></div>
+        <h3>Architectural Drafting</h3>
+        <p>Degree-holding drafters with CAD expertise, blueprint reading, and 3D modeling.</p>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon"><i class="fas fa-toilet"></i></div>
+        <h3>Plumbing</h3>
+        <p>Professional plumbers for installation, repair, and maintenance of residential & commercial systems.</p>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon"><i class="fa-solid fa-house-chimney"></i></div>
+        <h3>Masonry</h3>
+        <p>Experienced masons for brickwork, stone, concrete, and structural restoration.</p>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon"><i class="fas fa-hard-hat"></i></div>
+        <h3>Architectural Works</h3>
+        <p>Architectural designers and site supervisors to bring your building plans to life.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HIRE FORM SECTION -->
+  <section id="hire" class="container" style="padding-top: 0;">
+    <div class="hire-section">
+      <div class="form-header">
+        <i class="fas fa-envelope-open-text"></i>
+        <h2>Hire a professional</h2>
+        <p>Fill in the details — your request goes directly to our personal email.</p>
+      </div>
+
+      <!-- hidden success message (will appear after submit) -->
+      <div id="successToast" class="toast-message hidden">
+        <i class="fas fa-check-circle"></i> 
+        <span>Thank you! Your hiring request was sent. We'll get back to you shortly.</span>
+      </div>
+
+      <!-- FORM: action = mailto (direct to personal email) but we'll use JS for better UX -->
+      <form id="hireForm" class="hire-form" action="mailto:ryanvillarante9@gmail.com" method="post" enctype="text/plain">
+        <!-- Full name -->
+        <div class="form-group">
+          <label for="fullname"><i class="fas fa-user"></i> Full name</label>
+          <input type="text" id="fullname" name="Full Name" placeholder="e.g. Juan Dela Cruz" required>
+        </div>
+
+        <!-- Age -->
+        <div class="form-group">
+          <label for="age"><i class="fas fa-calendar-alt"></i> Age</label>
+          <input type="number" id="age" name="Age" min="18" max="99" placeholder="e.g. 32" required>
+        </div>
+
+        <!-- Address -->
+        <div class="form-group full-width">
+          <label for="address"><i class="fas fa-map-pin"></i> Address</label>
+          <input type="text" id="address" name="Address" placeholder="Street, City, Province" required>
+        </div>
+
+        <!-- Phone number (direct contact) -->
+        <div class="form-group">
+          <label for="phone"><i class="fas fa-phone-alt"></i> Phone number</label>
+          <input type="tel" id="phone" name="Phone Number" placeholder="+63 912 3456 789" required>
+        </div>
+
+        <!-- Email (optional for confirmation) -->
+        <div class="form-group">
+          <label for="email"><i class="fas fa-envelope"></i> Your email</label>
+          <input type="email" id="email" name="Email" placeholder="you@example.com" required>
+        </div>
+
+        <!-- Service / Skill needed -->
+        <div class="form-group full-width">
+          <label for="service"><i class="fas fa-tools"></i> Service needed</label>
+          <select id="service" name="Service Needed" required>
+            <option value="" disabled selected>Select the skill you need</option>
+            <option value="Architectural Drafting">Architectural Drafting</option>
+            <option value="Plumbing">Plumbing</option>
+            <option value="Masonry">Masonry</option>
+            <option value="Architectural Works">Architectural Works</option>
+            <option value="Plumber & Masonry combo">Plumber & Masonry combo</option>
+            <option value="Other (specify in message)">Other (specify in message)</option>
+          </select>
+        </div>
+
+        <!-- Additional message / details -->
+        <div class="form-group full-width">
+          <label for="message"><i class="fas fa-comment-dots"></i> Project details / message</label>
+          <textarea id="message" name="Message" placeholder="Tell us about your project, timeline, or specific requirements..."></textarea>
+        </div>
+
+        <!-- Submit button (will trigger JS to compose mailto) -->
+        <button type="submit" class="btn-submit">
+          <i class="fas fa-paper-plane"></i> Send hiring request
+        </button>
+        <p class="form-note"><i class="fas fa-lock"></i> Your information is sent directly to our personal email. No data stored.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="contact">
+    <div class="container footer-grid">
+      <div class="footer-logo">
+        <i class="fas fa-hard-hat"></i> SkillHire
+      </div>
+      <div class="footer-copy">
+        <i class="fas fa-envelope"></i> ryanvillarante9@gmail.com &nbsp;|&nbsp; 
+        <i class="fas fa-phone"></i> +63 954 236 2266
+      </div>
+      <div class="footer-copy">
+        &copy; 2026 SkillHire. Connecting skilled pros.
+      </div>
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT: intercept form, build mailto and show success -->
+  <script>
+    (function() {
+      const form = document.getElementById('hireForm');
+      const successToast = document.getElementById('successToast');
+      // Replace with your actual personal email:
+      const MY_EMAIL = 'ryanvillarante9@gmail.com';   // <-- CHANGE THIS
+
+      // Update the form action with the correct email
+      form.action = `mailto:${MY_EMAIL}`;
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();  // prevent page reload / default mailto
+
+        // Collect values
+        const fullname = document.getElementById('fullname').value.trim();
+        const age = document.getElementById('age').value.trim();
+        const address = document.getElementById('address').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const service = document.getElementById('service').value;
+        const message = document.getElementById('message').value.trim();
+
+        // Basic validation (HTML required already handles mostly)
+        if (!fullname || !age || !address || !phone || !email || !service) {
+          alert('Please fill in all required fields.');
+          return;
+        }
+
+        // Build email body
+        const subject = `Hiring request: ${service} — ${fullname}`;
+        const bodyLines = [
+          `Hello,`,
+          ``,
+          `You have a new hiring request via SkillHire:`,
+          ``,
+          `🔹 Full name: ${fullname}`,
+          `🔹 Age: ${age}`,
+          `🔹 Address: ${address}`,
+          `🔹 Phone number: ${phone}`,
+          `🔹 Email: ${email}`,
+          `🔹 Service needed: ${service}`,
+          ``,
+          `📝 Project details / message:`,
+          `${message || '—'}`,
+          ``,
+          `— Sent from SkillHire form`
+        ];
+        const body = bodyLines.join('\n');
+
+        // Build mailto link
+        const mailtoLink = `mailto:${MY_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+        // Open email client
+        window.location.href = mailtoLink;
+
+        // Show success toast (the email client will open, but we also show feedback)
+        successToast.classList.remove('hidden');
+
+        // Optional: reset form after a short delay (but keep data to avoid confusion? we'll reset after 1s)
+        setTimeout(() => {
+          // We don't reset immediately because user might want to see the data.
+          // But we can keep the toast and then optionally reset after a longer time.
+          // Uncomment next line to auto-reset after 3 seconds (and hide toast after 6s)
+          // form.reset();
+        }, 300);
+
+        // Hide toast after 6 seconds
+        setTimeout(() => {
+          successToast.classList.add('hidden');
+        }, 6000);
+
+        // Scroll to toast smoothly (optional)
+        successToast.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+
+      // Also update the static action just in case (for fallback)
+      form.action = `mailto:${MY_EMAIL}`;
+    })();
+  </script>
+  <!-- Note: Replace 'your.personal.email@example.com' in TWO places:
+       1. In the footer / contact info
+       2. In the JavaScript MY_EMAIL constant
+       Also you can update the form's action attribute, but it's now dynamic. 
+  -->
+</body>
+</html>
