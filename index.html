@@ -402,6 +402,12 @@
       transform: scale(1.01);
     }
 
+    .btn-submit:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
     .form-note {
       grid-column: span 2;
       text-align: center;
@@ -590,14 +596,20 @@
         <p>Fill in the details — your request goes directly to our personal email.</p>
       </div>
 
-      <!-- hidden success message (will appear after submit) -->
+      <!-- success message -->
       <div id="successToast" class="toast-message hidden">
         <i class="fas fa-check-circle"></i> 
-        <span>Thank you! Your hiring request was sent. We'll get back to you shortly.</span>
+        <span>Thank you! Your hiring request was sent successfully. We'll get back to you shortly.</span>
       </div>
 
-      <!-- FORM: action = mailto (direct to personal email) but we'll use JS for better UX -->
-      <form id="hireForm" class="hire-form" action="mailto:ryanvillarante9@gmail.com" method="post" enctype="text/plain">
+      <!-- error message -->
+      <div id="errorToast" class="toast-message hidden" style="background:#fdecec;color:#a13030;border-color:#f5b8b8;">
+        <i class="fas fa-exclamation-circle" style="color:#c0392b;"></i> 
+        <span>Oops! Something went wrong. Please try again or email us directly.</span>
+      </div>
+
+      <!-- FORM: submits to Web3Forms which sends directly to your email -->
+      <form id="hireForm" class="hire-form">
         <!-- Full name -->
         <div class="form-group">
           <label for="fullname"><i class="fas fa-user"></i> Full name</label>
@@ -622,7 +634,7 @@
           <input type="tel" id="phone" name="Phone Number" placeholder="+63 912 3456 789" required>
         </div>
 
-        <!-- Email (optional for confirmation) -->
+        <!-- Email -->
         <div class="form-group">
           <label for="email"><i class="fas fa-envelope"></i> Your email</label>
           <input type="email" id="email" name="Email" placeholder="you@example.com" required>
@@ -648,9 +660,15 @@
           <textarea id="message" name="Message" placeholder="Tell us about your project, timeline, or specific requirements..."></textarea>
         </div>
 
-        <!-- Submit button (will trigger JS to compose mailto) -->
-        <button type="submit" class="btn-submit">
-          <i class="fas fa-paper-plane"></i> Send hiring request
+        <!-- Web3Forms hidden fields -->
+        <input type="hidden" name="access_key" id="accessKeyField" value="">
+        <input type="hidden" name="subject" value="New Hiring Request from SkillHire">
+        <input type="hidden" name="from_name" value="SkillHire Website">
+        <!-- This makes Reply go back to the client's email -->
+        <input type="hidden" name="replyto" id="replyToField" value="">
+
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <i class="fas fa-paper-plane"></i> <span id="btnText">Send hiring request</span>
         </button>
         <p class="form-note"><i class="fas fa-lock"></i> Your information is sent directly to our personal email. No data stored.</p>
       </form>
@@ -673,90 +691,82 @@
     </div>
   </footer>
 
-  <!-- JAVASCRIPT: intercept form, build mailto and show success -->
+  <!-- JAVASCRIPT: submit to Web3Forms (auto-delivers to your email) -->
   <script>
     (function() {
+      // ============================================================
+      // ✅ PASTE YOUR WEB3FORMS ACCESS KEY HERE
+      // Get it free at: https://web3forms.com
+      // Enter email: ryanvillarante9@gmail.com
+      // ============================================================
+      const ACCESS_KEY = 'b6a34fc3-7c80-4e06-8330-0a414e6ad7ba';
+      // ============================================================
+
       const form = document.getElementById('hireForm');
       const successToast = document.getElementById('successToast');
-      // Replace with your actual personal email:
-      const MY_EMAIL = 'ryanvillarante9@gmail.com';   // <-- CHANGE THIS
+      const errorToast = document.getElementById('errorToast');
+      const submitBtn = document.getElementById('submitBtn');
+      const btnText = document.getElementById('btnText');
+      const accessKeyField = document.getElementById('accessKeyField');
+      const replyToField = document.getElementById('replyToField');
 
-      // Update the form action with the correct email
-      form.action = `mailto:${MY_EMAIL}`;
+      // Inject access key
+      accessKeyField.value = ACCESS_KEY;
 
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();  // prevent page reload / default mailto
-
-        // Collect values
-        const fullname = document.getElementById('fullname').value.trim();
-        const age = document.getElementById('age').value.trim();
-        const address = document.getElementById('address').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const service = document.getElementById('service').value;
-        const message = document.getElementById('message').value.trim();
-
-        // Basic validation (HTML required already handles mostly)
-        if (!fullname || !age || !address || !phone || !email || !service) {
-          alert('Please fill in all required fields.');
-          return;
-        }
-
-        // Build email body
-        const subject = `Hiring request: ${service} — ${fullname}`;
-        const bodyLines = [
-          `Hello,`,
-          ``,
-          `You have a new hiring request via SkillHire:`,
-          ``,
-          `🔹 Full name: ${fullname}`,
-          `🔹 Age: ${age}`,
-          `🔹 Address: ${address}`,
-          `🔹 Phone number: ${phone}`,
-          `🔹 Email: ${email}`,
-          `🔹 Service needed: ${service}`,
-          ``,
-          `📝 Project details / message:`,
-          `${message || '—'}`,
-          ``,
-          `— Sent from SkillHire form`
-        ];
-        const body = bodyLines.join('\n');
-
-        // Build mailto link
-        const mailtoLink = `mailto:${MY_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-        // Open email client
-        window.location.href = mailtoLink;
-
-        // Show success toast (the email client will open, but we also show feedback)
-        successToast.classList.remove('hidden');
-
-        // Optional: reset form after a short delay (but keep data to avoid confusion? we'll reset after 1s)
-        setTimeout(() => {
-          // We don't reset immediately because user might want to see the data.
-          // But we can keep the toast and then optionally reset after a longer time.
-          // Uncomment next line to auto-reset after 3 seconds (and hide toast after 6s)
-          // form.reset();
-        }, 300);
-
-        // Hide toast after 6 seconds
-        setTimeout(() => {
-          successToast.classList.add('hidden');
-        }, 6000);
-
-        // Scroll to toast smoothly (optional)
-        successToast.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Keep Reply-To updated with the client's email
+      const emailInput = document.getElementById('email');
+      emailInput.addEventListener('input', function() {
+        replyToField.value = emailInput.value.trim();
       });
 
-      // Also update the static action just in case (for fallback)
-      form.action = `mailto:${MY_EMAIL}`;
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        // Loading state
+        submitBtn.disabled = true;
+        btnText.textContent = 'Sending...';
+        successToast.classList.add('hidden');
+        errorToast.classList.add('hidden');
+
+        // Set replyto dynamically
+        replyToField.value = emailInput.value.trim();
+
+        // Build FormData
+        const formData = new FormData(form);
+
+        try {
+          const response = await fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify(Object.fromEntries(formData.entries()))
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            // ✅ Delivered to ryanvillarante9@gmail.com
+            successToast.classList.remove('hidden');
+            successToast.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            form.reset();
+            accessKeyField.value = ACCESS_KEY;
+            setTimeout(() => successToast.classList.add('hidden'), 7000);
+          } else {
+            throw new Error(result.message || 'Submission failed');
+          }
+        } catch (err) {
+          console.error('Submission error:', err);
+          errorToast.classList.remove('hidden');
+          errorToast.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(() => errorToast.classList.add('hidden'), 7000);
+        } finally {
+          submitBtn.disabled = false;
+          btnText.textContent = 'Send hiring request';
+        }
+      });
     })();
   </script>
-  <!-- Note: Replace 'your.personal.email@example.com' in TWO places:
-       1. In the footer / contact info
-       2. In the JavaScript MY_EMAIL constant
-       Also you can update the form's action attribute, but it's now dynamic. 
-  -->
 </body>
 </html>
